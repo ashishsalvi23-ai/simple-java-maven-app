@@ -1,32 +1,30 @@
 pipeline {
     agent any
+
     tools {
-        maven 'Maven3.9'    // Must match the name in Jenkins Global Tools
-        jdk 'JDK17'         // Must match the name in Jenkins Global Tools
+        maven 'Maven 3.9'
+        jdk 'JDK 17'
     }
+
     stages {
         stage('Checkout') {
             steps {
-                echo 'Checking out source code from GitHub...'
                 checkout scm
             }
         }
 
         stage('Build') {
             steps {
-                echo 'Building the Java application with Maven...'
-                sh 'mvn clean compile'
+                bat 'mvn clean compile'
             }
         }
 
         stage('Unit Test') {
             steps {
-                echo 'Running unit tests...'
-                sh 'mvn test'
+                bat 'mvn test'
             }
             post {
                 always {
-                    echo 'Archiving test results...'
                     junit 'target/surefire-reports/*.xml'
                 }
             }
@@ -34,8 +32,7 @@ pipeline {
 
         stage('Package') {
             steps {
-                echo 'Packaging the application...'
-                sh 'mvn package -DskipTests'
+                bat 'mvn package -DskipTests'
             }
             post {
                 success {
@@ -50,7 +47,7 @@ pipeline {
             echo 'Pipeline completed successfully!'
         }
         failure {
-            echo 'Pipeline failed. Check the logs for details.'
+            echo 'Pipeline failed. Check logs.'
         }
     }
 }
