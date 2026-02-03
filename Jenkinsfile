@@ -1,38 +1,38 @@
 pipeline {
     agent any
-
     tools {
-        maven 'Maven3.9'
-        jdk 'JDK17'
+        maven 'Maven 3.9'
+        jdk 'JDK 17'
     }
-
     stages {
         stage('Checkout') {
             steps {
+                echo 'Checking out source code from GitHub...'
                 checkout scm
             }
         }
-
         stage('Build') {
             steps {
-                bat 'mvn clean compile'
+                echo 'Building the Java application with Maven...'
+                sh 'mvn clean compile'
             }
         }
-
         stage('Unit Test') {
             steps {
-                bat 'mvn test'
+                echo 'Running unit tests...'
+                sh 'mvn test'
             }
             post {
                 always {
+                    echo 'Archiving test results...'
                     junit 'target/surefire-reports/*.xml'
                 }
             }
         }
-
         stage('Package') {
             steps {
-                bat 'mvn package -DskipTests'
+                echo 'Packaging the application...'
+                sh 'mvn package -DskipTests'
             }
             post {
                 success {
@@ -41,13 +41,12 @@ pipeline {
             }
         }
     }
-
     post {
         success {
             echo 'Pipeline completed successfully!'
         }
         failure {
-            echo 'Pipeline failed. Check logs.'
+            echo 'Pipeline failed. Check the logs for details.'
         }
     }
 }
