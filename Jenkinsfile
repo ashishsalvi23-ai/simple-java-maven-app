@@ -1,9 +1,11 @@
 pipeline {
     agent any
+
     tools {
-        maven 'Maven 3.9'
-        jdk 'JDK 17'
+        maven 'Maven3.9'
+        jdk 'JDK17'
     }
+
     stages {
         stage('Checkout') {
             steps {
@@ -11,16 +13,18 @@ pipeline {
                 checkout scm
             }
         }
+
         stage('Build') {
             steps {
                 echo 'Building the Java application with Maven...'
-                sh 'mvn clean compile'
+                bat 'mvn clean compile'
             }
         }
+
         stage('Unit Test') {
             steps {
                 echo 'Running unit tests...'
-                sh 'mvn test'
+                bat 'mvn test'
             }
             post {
                 always {
@@ -29,10 +33,11 @@ pipeline {
                 }
             }
         }
+
         stage('Package') {
             steps {
                 echo 'Packaging the application...'
-                sh 'mvn package -DskipTests'
+                bat 'mvn package -DskipTests'
             }
             post {
                 success {
@@ -41,6 +46,7 @@ pipeline {
             }
         }
     }
+
     post {
         success {
             echo 'Pipeline completed successfully!'
