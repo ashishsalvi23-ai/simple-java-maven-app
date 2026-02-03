@@ -17,18 +17,17 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building the Java application with Maven...'
-                bat 'mvn clean compile'
+                bat '"%MAVEN_HOME%\\bin\\mvn.cmd" clean compile'
             }
         }
 
         stage('Unit Test') {
             steps {
                 echo 'Running unit tests...'
-                bat 'mvn test'
+                bat '"%MAVEN_HOME%\\bin\\mvn.cmd" test'
             }
             post {
                 always {
-                    echo 'Archiving test results...'
                     junit 'target/surefire-reports/*.xml'
                 }
             }
@@ -37,7 +36,7 @@ pipeline {
         stage('Package') {
             steps {
                 echo 'Packaging the application...'
-                bat 'mvn package -DskipTests'
+                bat '"%MAVEN_HOME%\\bin\\mvn.cmd" package -DskipTests'
             }
             post {
                 success {
